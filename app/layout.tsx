@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { AuthProvider } from "@/components/Providers";
 import BackgroundPattern from "@/components/BackgroundPattern";
 
 const winkRough = Texturina({
@@ -31,8 +32,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <BackgroundPattern />
-          {children}
+          <AuthProvider>
+            <BackgroundPattern />
+            {children}
+          </AuthProvider>
           <ToastContainer
             autoClose={2000}
             position="top-right"
