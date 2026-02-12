@@ -80,7 +80,6 @@ export const sendOrderConfirmation = async (order: any, user: any) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Order confirmation email sent to:", user.email);
   } catch (error) {
     console.error("Error sending order email:", error);
   }
@@ -145,7 +144,6 @@ export const sendOrderStatusUpdateEmail = async (order: any, user: any, estimate
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Order status email sent to:", user.email);
   } catch (error) {
     console.error("Error sending status email:", error);
   }

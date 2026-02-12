@@ -17,7 +17,12 @@ const UserSchema = new mongoose.Schema(
         },
         avatar: {
             type: String,
-            default: "",
+            default: "https://robohash.org/diversion",
+        },
+        gender: {
+            type: String,
+            enum: ["male", "female", "non binary"],
+            default: "male",
         },
     },
     {
@@ -25,7 +30,9 @@ const UserSchema = new mongoose.Schema(
     }
 );
 
-// Prevent reconfiguration of model
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
+if (mongoose.models.User) {
+    (User as any).schema = UserSchema;
+}
 
 export default User;

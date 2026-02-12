@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
-import { validateEmail, validatePassword } from "@/lib/validations/auth";
-import { createUser, getUserByEmail, hashPassword } from "@/lib/services/user";
+import { validateEmail, validatePassword } from "@/lib/validations";
+import { createUser, getUserByEmail, hashPassword } from "@/lib/services";
 import { connectToDatabase } from "@/lib/db";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password } = await req.json();
+        const { name, email, password, gender } = await req.json();
 
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !gender) {
             return NextResponse.json(
                 { message: "Missing required fields" },
                 { status: 400 }
-            );  
+            );
         }
 
         const emailError = validateEmail(email);
@@ -42,6 +42,7 @@ export async function POST(req: Request) {
             email,
             password: hashedPassword,
             avatar: `https://robohash.org/${email}`,
+            gender,
         });
 
         return NextResponse.json(

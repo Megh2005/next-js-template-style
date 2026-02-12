@@ -1,12 +1,8 @@
 import { NextAuthOptions } from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { clientPromise } from "@/lib/db";
-import { getUserByEmail, verifyPassword } from "@/lib/services/user";
+import { getUserByEmail, verifyPassword } from "@/lib/services";
 
 export const authOptions: NextAuthOptions = {
-    // @ts-ignore - Adapting types between mongoose/mongodb versions
-    adapter: MongoDBAdapter(clientPromise),
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -39,6 +35,7 @@ export const authOptions: NextAuthOptions = {
                     name: user.name,
                     email: user.email,
                     avatar: user.avatar,
+                    gender: user.gender,
                 };
             },
         }),
@@ -51,16 +48,33 @@ export const authOptions: NextAuthOptions = {
         signIn: "/auth",
     },
     callbacks: {
-        async jwt({ token, user }: any) {
+        async jwt({ token, user, trigger, session }: any) {
+            // Initial sign in - user object is available
             if (user) {
                 token.avatar = user.avatar;
+                token.gender = user.gender;
             }
+
+            // Session update triggered - fetch fresh data from database
+            if (trigger === "update") {
+                const { getUserById } = await import("@/lib/services");
+                const freshUser = await getUserById(token.sub);
+
+                if (freshUser) {
+                    token.name = freshUser.name;
+                    token.email = freshUser.email;
+                    token.avatar = freshUser.avatar;
+                    token.gender = freshUser.gender;
+                }
+            }
+
             return token;
         },
         async session({ session, token }: any) {
             if (session.user) {
                 session.user.id = token.sub;
                 session.user.avatar = token.avatar;
+                session.user.gender = token.gender;
             }
             return session;
         },

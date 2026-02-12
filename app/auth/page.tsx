@@ -51,6 +51,7 @@ export default function AuthPage() {
     signupName: "",
     signupEmail: "",
     signupPassword: "",
+    gender: "",
   });
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -100,6 +101,10 @@ export default function AuthPage() {
       }
       if (!validateEmail(formData.signupEmail)) return;
       if (!validatePassword(formData.signupPassword)) return;
+      if (!formData.gender) {
+        toast.error("Please select your gender");
+        return;
+      }
     }
 
     setLoading(true);
@@ -113,6 +118,7 @@ export default function AuthPage() {
             name: formData.signupName,
             email: formData.signupEmail,
             password: formData.signupPassword,
+            gender: formData.gender,
           }),
         }).then(async (res) => {
           const data = await res.json();
@@ -122,7 +128,7 @@ export default function AuthPage() {
 
         await toast.promise(promise, {
           pending: "Creating account...",
-          success: "Account created! Redirecting to login...",
+          success: "Account created!",
           error: {
             render({ data }: any) {
               return data?.message || "Something went wrong";
@@ -189,7 +195,9 @@ export default function AuthPage() {
                 Automatic Redirection
               </p>
               <div className="flex items-baseline justify-center gap-1.5 mb-4">
-                <span className="text-4xl font-bold text-sky-900">{countdown}</span>
+                <span className="text-4xl font-bold text-sky-900">
+                  {countdown}
+                </span>
               </div>
               <div className="w-full h-1 bg-slate-200 rounded-full overflow-hidden">
                 <div
@@ -336,6 +344,29 @@ export default function AuthPage() {
                   onChange={handleInputChange}
                   onBlur={handleEmailBlur}
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="gender" className="text-slate-900 font-medium">
+                  Gender
+                </Label>
+                <select
+                  id="gender"
+                  className="w-full border-2 border-slate-900 focus:border-sky-900 rounded-lg bg-white h-9 px-3 outline-none font-medium transition-all text-sm appearance-none"
+                  value={formData.gender}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      gender: e.target.value,
+                    }))
+                  }
+                >
+                  <option value="" disabled>
+                    Select Gender
+                  </option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non binary">Non Binary</option>
+                </select>
               </div>
               <div className="space-y-2">
                 <Label
