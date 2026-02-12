@@ -2,7 +2,7 @@ import { MongoClient, Db } from "mongodb";
 import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = "MedChainify";
+const MONGODB_DB = "diversion";
 
 if (!MONGODB_URI) {
     throw new Error(
