@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import BackgroundPattern from "@/components/BackgroundPattern";
+
 const winkRough = Texturina({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -22,15 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={winkRough.className}
-      >
+      <body className={`${winkRough.className} relative`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
+          <BackgroundPattern />
           {children}
           <ToastContainer
             autoClose={2000}

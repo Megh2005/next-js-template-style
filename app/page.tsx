@@ -3,11 +3,6 @@ import React from "react";
 export default function Home() {
   return (
     <div className="relative h-screen">
-      {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] bg-size-[6rem_4rem]"></div>
-      </div>
-
       {/* Hero Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
         <div className="max-w-3xl text-center">
