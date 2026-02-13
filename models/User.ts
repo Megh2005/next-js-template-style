@@ -24,6 +24,19 @@ const UserSchema = new mongoose.Schema(
             enum: ["male", "female", "non binary"],
             default: "male",
         },
+        state: {
+            type: String,
+        },
+        city: {
+            type: String,
+        },
+        pincode: {
+            type: String,
+        },
+        isAddressUpdated: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

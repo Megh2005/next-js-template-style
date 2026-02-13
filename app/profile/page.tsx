@@ -10,7 +10,20 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
-import { Pencil, Save, X } from "lucide-react";
+import {
+  Pencil,
+  Save,
+  X,
+  Map as MapIcon,
+  Building2,
+  MapPin,
+  User,
+  VenusAndMars,
+  MapPinned,
+} from "lucide-react";
+import CompleteProfileSheet from "@/components/CompleteProfileSheet";
+import { indianStatesAndCities } from "@/lib/states";
+import { validatePincode } from "@/lib/pincode-validator";
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
@@ -20,7 +33,15 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     name: "",
     gender: "",
+    state: "",
+    city: "",
+    pincode: "",
   });
+
+  const availableStates = Object.keys(indianStatesAndCities).sort();
+  const availableCities = formData.state
+    ? (indianStatesAndCities[formData.state] || []).sort()
+    : [];
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -28,14 +49,32 @@ export default function ProfilePage() {
     }
   }, [status, router]);
 
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch("/api/profile");
+      if (res.ok) {
+        const data = await res.json();
+        setFormData({
+          name: data.name || "",
+          gender: data.gender || "",
+          state: data.state || "",
+          city: data.city || "",
+          pincode: data.pincode || "",
+        });
+        setUserData(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
+
   useEffect(() => {
     if (session?.user) {
-      setFormData({
-        name: session.user.name || "",
-        gender: (session.user as any).gender || "",
-      });
+      fetchUserData();
     }
   }, [session]);
+
+  const [userData, setUserData] = useState<any>(null);
 
   if (status === "loading") {
     return (
@@ -54,6 +93,18 @@ export default function ProfilePage() {
       return;
     }
 
+    if (formData.state && formData.city && formData.pincode) {
+      const validation = validatePincode(
+        formData.state,
+        formData.city,
+        formData.pincode,
+      );
+      if (!validation.isValid) {
+        toast.error(validation.message || "Invalid Pincode");
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/profile/update", {
@@ -62,6 +113,9 @@ export default function ProfilePage() {
         body: JSON.stringify({
           name: formData.name,
           gender: formData.gender,
+          state: formData.state,
+          city: formData.city,
+          pincode: formData.pincode,
         }),
       });
 
@@ -86,6 +140,9 @@ export default function ProfilePage() {
     setFormData({
       name: session.user.name || "",
       gender: (session.user as any).gender || "",
+      state: userData?.state || "",
+      city: userData?.city || "",
+      pincode: userData?.pincode || "",
     });
     setIsEditing(false);
   };
@@ -93,7 +150,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <BackgroundPattern />
-      <Card className="w-full max-w-md border-2 border-slate-900 shadow-lg rounded-xl bg-white/95 backdrop-blur-sm">
+      <Card className="w-full max-w-4xl border-2 border-slate-900 shadow-lg rounded-xl bg-white/95 backdrop-blur-sm">
         <CardHeader className="text-center relative border-b border-slate-900 pb-2">
           <CardTitle className="text-2xl font-bold text-slate-900">
             User Profile
@@ -182,6 +239,89 @@ export default function ProfilePage() {
                   </select>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="state"
+                      className="text-slate-900 font-semibold text-sm"
+                    >
+                      State
+                    </Label>
+                    <select
+                      id="state"
+                      value={formData.state}
+                      onChange={(e) => {
+                        const newState = e.target.value;
+                        setFormData((prev) => ({
+                          ...prev,
+                          state: newState,
+                          city: "", // Reset city when state changes
+                          pincode: "", // Reset pincode when state changes
+                        }));
+                      }}
+                      className="w-full border-2 border-slate-900 focus:border-sky-900 rounded-lg bg-white h-10 px-3 outline-none font-medium transition-all text-sm text-slate-900"
+                    >
+                      <option value="">Select State</option>
+                      {availableStates.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="city"
+                      className="text-slate-900 font-semibold text-sm"
+                    >
+                      City
+                    </Label>
+                    <select
+                      id="city"
+                      value={formData.city}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          city: e.target.value,
+                          pincode: "",
+                        }))
+                      }
+                      disabled={!formData.state}
+                      className="w-full border-2 border-slate-900 focus:border-sky-900 rounded-lg bg-white h-10 px-3 outline-none font-medium transition-all text-sm text-slate-900 disabled:bg-slate-100 disabled:text-slate-400"
+                    >
+                      <option value="">Select City</option>
+                      {availableCities.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="pincode"
+                      className="text-slate-900 font-semibold text-sm"
+                    >
+                      Pincode
+                    </Label>
+                    <Input
+                      id="pincode"
+                      value={formData.pincode}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          pincode: e.target.value,
+                        }))
+                      }
+                      maxLength={6}
+                      disabled={!formData.city}
+                      className="border-2 border-slate-900 focus-visible:ring-0 focus-visible:border-sky-900 rounded-lg bg-white font-medium text-slate-900 disabled:bg-slate-100 disabled:text-slate-400"
+                    />
+                  </div>
+                </div>
+
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={handleSave}
@@ -219,27 +359,76 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-4 space-y-1 hover:bg-white transition-colors">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                    Gender
-                  </p>
-                  <p className="text-base font-bold text-slate-900 capitalize">
-                    {(session.user as any).gender || "Not specified"}
-                  </p>
-                </div>
+                {/* Info Grid Section */}
+                {userData && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {/* Gender */}
+                    <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-3 flex flex-col items-center justify-center text-center gap-1 hover:bg-white transition-colors">
+                      <VenusAndMars className="h-5 w-5 text-slate-500" />
+                      <p className="text-xs font-bold text-slate-900 capitalize">
+                        {userData.gender || "N/A"}
+                      </p>
+                      <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                        Gender
+                      </p>
+                    </div>
+
+                    {/* Address Fields */}
+                    {(userData.isAddressUpdated ||
+                      (userData.state &&
+                        userData.city &&
+                        userData.pincode)) && (
+                      <>
+                        <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-3 flex flex-col items-center justify-center text-center gap-1 hover:bg-white transition-colors">
+                          <MapIcon className="h-5 w-5 text-slate-500" />
+                          <p className="text-xs font-bold text-slate-900">
+                            {userData.state}
+                          </p>
+                          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                            State
+                          </p>
+                        </div>
+                        <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-3 flex flex-col items-center justify-center text-center gap-1 hover:bg-white transition-colors">
+                          <MapPinned className="h-5 w-5 text-slate-500" />
+                          <p className="text-xs font-bold text-slate-900">
+                            {userData.city}
+                          </p>
+                          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                            City
+                          </p>
+                        </div>
+                        <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-3 flex flex-col items-center justify-center text-center gap-1 hover:bg-white transition-colors">
+                          <MapPin className="h-5 w-5 text-slate-500" />
+                          <p className="text-xs font-bold text-slate-900">
+                            {userData.pincode}
+                          </p>
+                          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                            Pincode
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </div>
 
           <div className="w-full px-2 pt-2 space-y-3">
             {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold bg-sky-900 text-white hover:bg-sky-800 border-2 border-slate-900 hover:shadow-md active:shadow-sm transition-all"
-              >
-                <Pencil className="h-4 w-4" />
-                Edit Profile
-              </button>
+              <div className="flex gap-3 w-full">
+                <CompleteProfileSheet
+                  userData={userData}
+                  onUpdate={fetchUserData}
+                />
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-lg px-4 py-3 font-semibold bg-sky-900 text-white hover:bg-sky-800 border-2 border-slate-900 hover:shadow-md active:shadow-sm transition-all whitespace-nowrap"
+                >
+                  <Pencil className="h-4 w-4" />
+                  Edit Profile
+                </button>
+              </div>
             )}
             {!isEditing && <SignOutButton />}
           </div>

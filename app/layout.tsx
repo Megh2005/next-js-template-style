@@ -4,9 +4,11 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { AuthProvider } from "@/components/Providers";
 import BackgroundPattern from "@/components/BackgroundPattern";
+import DockNav from "@/components/DockNav";
 
 const winkRough = Texturina({
   subsets: ["latin"],
@@ -33,8 +35,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <BackgroundPattern />
-            {children}
+            <TooltipProvider>
+              <BackgroundPattern />
+              <main className="pb-32">{children}</main>
+              <DockNav />
+            </TooltipProvider>
           </AuthProvider>
           <ToastContainer
             autoClose={2000}

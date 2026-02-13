@@ -44,6 +44,16 @@ export async function PATCH(req: NextRequest) {
             updateData.avatar = avatar;
         }
 
+        const { state, city, pincode } = body;
+        if (state !== undefined) updateData.state = state;
+        if (city !== undefined) updateData.city = city;
+        if (pincode !== undefined) updateData.pincode = pincode;
+
+        // If address fields are updated, set isAddressUpdated to true
+        if (state || city || pincode) {
+            updateData.isAddressUpdated = true;
+        }
+
         // Update user in database
         const updatedUser = await updateUser(session.user.id, updateData);
 

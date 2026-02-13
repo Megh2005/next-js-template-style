@@ -53,6 +53,8 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.avatar = user.avatar;
                 token.gender = user.gender;
+                token.avatar = user.avatar;
+                token.gender = user.gender;
             }
 
             // Session update triggered - fetch fresh data from database
@@ -65,6 +67,7 @@ export const authOptions: NextAuthOptions = {
                     token.email = freshUser.email;
                     token.avatar = freshUser.avatar;
                     token.gender = freshUser.gender;
+                    token.gender = freshUser.gender;
                 }
             }
 
@@ -74,6 +77,7 @@ export const authOptions: NextAuthOptions = {
             if (session.user) {
                 session.user.id = token.sub;
                 session.user.avatar = token.avatar;
+                session.user.gender = token.gender;
                 session.user.gender = token.gender;
             }
             return session;
