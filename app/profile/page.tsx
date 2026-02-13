@@ -20,6 +20,7 @@ import {
   User,
   VenusAndMars,
   MapPinned,
+  Mail,
 } from "lucide-react";
 import CompleteProfileSheet from "@/components/CompleteProfileSheet";
 import { indianStatesAndCities } from "@/lib/states";
@@ -341,22 +342,34 @@ export default function ProfilePage() {
               </>
             ) : (
               <>
-                <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-4 space-y-1 hover:bg-white transition-colors">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                    Name
-                  </p>
-                  <p className="text-base font-bold text-slate-900">
-                    {session.user.name}
-                  </p>
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-4 flex items-center gap-4 hover:bg-white transition-colors">
+                    <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 border-2 border-slate-900">
+                      <User className="h-5 w-5 text-slate-700" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                        Name
+                      </p>
+                      <p className="text-base font-bold text-slate-900">
+                        {session.user.name}
+                      </p>
+                    </div>
+                  </div>
 
-                <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-4 space-y-1 hover:bg-white transition-colors">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                    Email
-                  </p>
-                  <p className="text-base font-bold text-slate-900 break-all">
-                    {session.user.email}
-                  </p>
+                  <div className="bg-slate-50 border-2 border-slate-900 rounded-lg p-4 flex items-center gap-4 hover:bg-white transition-colors">
+                    <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 border-2 border-slate-900">
+                      <Mail className="h-5 w-5 text-slate-700" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                        Email
+                      </p>
+                      <p className="text-base font-bold text-slate-900 break-all">
+                        {session.user.email}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Info Grid Section */}

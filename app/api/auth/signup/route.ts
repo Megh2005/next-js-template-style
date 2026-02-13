@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { validateEmail, validatePassword } from "@/lib/validations";
 import { createUser, getUserByEmail, hashPassword } from "@/lib/services";
 import { connectToDatabase } from "@/lib/db";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password, gender } = await req.json();
+        const { name, email, password, gender, otp, hash } = await req.json();
 
-        if (!name || !email || !password || !gender) {
+        if (!name || !email || !password || !gender || !otp || !hash) {
             return NextResponse.json(
                 { message: "Missing required fields" },
                 { status: 400 }
@@ -31,6 +32,30 @@ export async function POST(req: Request) {
         if (existingUser) {
             return NextResponse.json(
                 { message: "User already exists" },
+                { status: 400 }
+            );
+        }
+
+        // Verify OTP Hash
+        // Expected hash format: signature.expiresAt
+        const [signature, expiresAt] = hash.split(".");
+
+        // Check expiration
+        if (Date.now() > parseInt(expiresAt)) {
+            return NextResponse.json(
+                { message: "OTP has expired" },
+                { status: 400 }
+            );
+        }
+
+        // Verify signature
+        const secret = process.env.NEXTAUTH_SECRET || "fallback_secret_key";
+        const data = `${email}.${otp}.${expiresAt}`;
+        const computedSignature = crypto.createHmac("sha256", secret).update(data).digest("hex");
+
+        if (computedSignature !== signature) {
+            return NextResponse.json(
+                { message: "Invalid OTP" },
                 { status: 400 }
             );
         }
