@@ -1,16 +1,16 @@
 # Modern Next.js Starter Template
 
-Diversion is a comprehensive and production-ready Next.js starter template designed to accelerate your web development workflow. Built with modern best practices and a carefully curated tech stack, this template provides everything you need to kickstart your next web application with authentication, database integration, beautiful UI components, and powerful developer tools right out of the box.
+This is a comprehensive and production-ready Next.js starter template designed to accelerate your web development workflow. Built with modern best practices and a carefully curated tech stack, this template provides everything you need to kickstart your next web application with authentication, database integration, beautiful UI components, and powerful developer tools right out of the box.
 
-This template is perfect for developers who want to skip the repetitive setup process and dive straight into building features. Whether you're creating a SaaS application, a content management system, or a complex web platform, Diversion provides a solid foundation with enterprise-grade architecture and scalability in mind.
+This template is perfect for developers who want to skip the repetitive setup process and dive straight into building features. Whether you're creating a SaaS application, a content management system, or a complex web platform, this starter provides a solid foundation with enterprise-grade architecture and scalability in mind.
 
 ## What's Inside
 
-Diversion comes pre-configured with a powerful combination of technologies that work seamlessly together. At its core, it leverages **Next.js 16** with React 19, providing you with the latest features including server components, streaming, and optimized rendering. The template uses **TypeScript** throughout, ensuring type safety and better developer experience with intelligent code completion and early error detection.
+This template comes pre-configured with a powerful combination of technologies that work seamlessly together. At its core, it leverages **Next.js 16** with React 19, providing you with the latest features including server components, streaming, and optimized rendering. The template uses **TypeScript** throughout, ensuring type safety and better developer experience with intelligent code completion and early error detection.
 
 Authentication is handled through **NextAuth.js** with MongoDB adapter integration, giving you a flexible and secure authentication system that supports multiple providers and custom credentials. The template includes pre-built authentication pages, middleware protection for routes, and session management, so you can focus on building your application logic rather than wrestling with auth configuration.
 
-For styling, Diversion embraces **Tailwind CSS 4** with a custom design system and includes **shadcn/ui** components configured in the New York style. This combination provides you with beautiful, accessible, and customizable UI components that maintain consistency across your application. The template also integrates **Framer Motion** for smooth animations and transitions, elevating the user experience with polished interactions.
+For styling, the template embraces **Tailwind CSS 4** with a custom design system and includes **shadcn/ui** components configured in the New York style. This combination provides you with beautiful, accessible, and customizable UI components that maintain consistency across your application. The template also integrates **Framer Motion** for smooth animations and transitions, elevating the user experience with polished interactions.
 
 Database connectivity is established through **Mongoose**, providing an elegant MongoDB object modeling solution with built-in type casting, validation, and query building. The template includes example models and database connection utilities that follow best practices for serverless environments.
 
@@ -18,7 +18,7 @@ Additional features include **Cloudinary** integration for image and media manag
 
 ## Getting Started
 
-To get started with Diversion, first clone the repository to your local machine. Once cloned, navigate to the project directory and install the dependencies. This template uses **pnpm** as the package manager for faster and more efficient dependency management, though you can use npm or yarn if you prefer.
+To get started, first clone the repository to your local machine. Once cloned, navigate to the project directory and install the dependencies. This template uses **pnpm** as the package manager for faster and more efficient dependency management, though you can use npm or yarn if you prefer.
 
 After installing dependencies, you'll need to set up your environment variables. Create a `.env` file in the root directory based on the `.env.example` file (if provided) or configure the following essential variables:
 
@@ -68,7 +68,7 @@ The template is configured to work seamlessly with Vercel, Netlify, or any other
 
 ## Customization
 
-Diversion is designed to be a starting point, not a rigid framework. You can easily customize the color scheme and design tokens by modifying the Tailwind configuration and CSS variables in `app/globals.css`. Add or remove shadcn/ui components using the shadcn CLI, extend the authentication system with additional providers or custom logic, create new Mongoose models in the `models` directory, and add new API routes in the `app/api` directory.
+This template is designed to be a starting point, not a rigid framework. You can easily customize the color scheme and design tokens by modifying the Tailwind configuration and CSS variables in `app/globals.css`. Add or remove shadcn/ui components using the shadcn CLI, extend the authentication system with additional providers or custom logic, create new Mongoose models in the `models` directory, and add new API routes in the `app/api` directory.
 
 The modular architecture makes it easy to remove features you don't need or add new ones without breaking existing functionality. Each integration is loosely coupled, allowing you to swap out services or libraries as your requirements evolve.
 
