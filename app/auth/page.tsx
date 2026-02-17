@@ -331,6 +331,15 @@ export default function AuthPage() {
                   </button>
                 </div>
               </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => router.push("/auth/forgot-password")}
+                  className="text-sm font-medium text-sky-900 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
               <button
                 onClick={() => handleAuth("signin")}
                 disabled={loading}
